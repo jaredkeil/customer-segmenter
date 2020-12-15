@@ -9,9 +9,11 @@ numpy = "*"
 pandas = "*"
 sklearn = "*"
 matplotlib = "*"
+xlrd = "*"
 
 [dev-packages]
 pylint = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.8"
