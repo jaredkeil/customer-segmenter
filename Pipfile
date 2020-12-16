@@ -10,10 +10,14 @@ pandas = "*"
 sklearn = "*"
 matplotlib = "*"
 openpyxl = "*"
+fastparquet = "*"
+pyspark = "*"
+seaborn = "*"
 
 [dev-packages]
 pylint = "*"
 pytest = "*"
+ipykernel = "*"
 
 [requires]
 python_version = "3.8"
