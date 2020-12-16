@@ -1,0 +1,76 @@
+from pathlib import Path
+import re
+import subprocess
+from multiprocessing.dummy import Pool
+from argparse import ArgumentParser
+import pandas as pd
+from customerSeg.config import data_dir
+
+
+class BatchConverter:
+
+    def __init__(self, xlsx_dir, csv_dir, outputcsv, script_path):
+        self.xlsx_dir = xlsx_dir
+        self.csv_dir = csv_dir
+        self.outputcsv = outputcsv
+        self.script_path = script_path
+    
+    def run(self, n_threads=2):
+        """
+        Converts all .xlsx files in <xlsx_dir> to .csv files, saved to <csv_dir>
+        """
+        print(f'Searching for files in {self.xlsx_dir}')
+        commands = self._generate_subprocess_list()
+
+        print(f'Converting {len(commands)} files...')
+        self._multithread_calls(commands, n_threads)
+        print('Converted')
+    
+    def _generate_subprocess_list(self):
+        commands = []
+        for filepath in self.xlsx_dir.glob('*.xlsx'):
+            filename = re.search(r'(.+[\\|\/])(.+)(\.(csv|xlsx|xls))', str(filepath)).group(2) # Extract File Name on group 2 "(.+)"
+            call = ["python", str(self.script_path), str(filepath), str(self.csv_dir/filename)+'.csv']
+            commands.append(call)
+        return commands
+
+    def _multithread_calls(self, command_list, n_threads):
+        pool = Pool(2)
+        # on Windows: use functools.partial(subprocess.call, shell=True) in place of subprocess.call 
+        for i, return_code in enumerate(pool.imap(subprocess.call, command_list)):
+            if return_code != 0:
+                print(f"Command # {i} failed with return code {return_code}.")
+
+    def merge_csvs(self, output_filepath):
+        """
+        Use after converting xlsx to csv with self.run(). Merges all .csvs in <csv_dir> into one.
+        """
+        listofdataframes = []
+        for filepath in self.csv_dir.glob('*.csv'):
+            df = pd.read_csv(filepath)
+            if df.shape[1] == 8: # make sure 8 columns
+                listofdataframes.append(df)
+            else:
+                print(f'{filepath}  has {df.shape[1]} columns - skipping')
+
+        bigdataframe = pd.concat(listofdataframes).reset_index(drop=True)
+        bigdataframe.to_csv(self.outputcsv,index=False)
+
+
+if __name__ == '__main__':
+    # parser = ArgumentParser(description="Convert batches of xlsx files to csv, using xlsx2csv/multithreading")
+
+    # parser.add_argument('indir', metavar='xlsx_dir', help='extraction directory containing xlsx files')
+    # parser.add_argument('outdir', metavar='csv_dir', help='output directory to save csv files')
+    # parser.add_argument('outpath', metavar='merge_path', default='', help='output merged csv filepath')
+
+    # options = parser.parse_args()
+
+    converter_script_path = Path(__file__).parent / 'xlsx2csv.py'
+    xlsx_directory= data_dir / 'extract'
+    csv_directory = data_dir / 'csv'
+    output_filepath = data_dir / 'merged' / 'merge.csv'
+
+    BC = BatchConverter(xlsx_directory, csv_directory, output_filepath, converter_script_path)
+    BC.run()
+    BC.merge_csvs(output_filepath)
