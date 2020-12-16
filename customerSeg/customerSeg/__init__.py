@@ -1,1 +1,1 @@
-from .config import data_path, data_dir
+from .config import data_dir
