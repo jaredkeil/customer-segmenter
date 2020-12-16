@@ -9,7 +9,7 @@ numpy = "*"
 pandas = "*"
 sklearn = "*"
 matplotlib = "*"
-xlrd = "*"
+openpyxl = "*"
 
 [dev-packages]
 pylint = "*"
