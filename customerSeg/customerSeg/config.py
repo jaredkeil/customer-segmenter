@@ -1,3 +1,5 @@
 from pathlib import Path
 
-data_dir = Path(__file__).parents[2] / 'data/'
+root = Path(__file__).parents[2]
+data_dir = root / 'data/'
+raw_dir = data_dir / 'merge'
