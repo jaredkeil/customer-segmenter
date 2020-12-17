@@ -2,6 +2,10 @@
 *.DS_Store
 *.vscode/
 
+# Potentially large data files
+*.xls
+*.csv
+*.parquet
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
