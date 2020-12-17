@@ -1,6 +1,6 @@
 from pathlib import Path
 
-# Should be root of entire repository
+# Should be root of 'customer-segmenter' repository
 root = Path(__file__).parents[2]
 
 data_dir = root / 'data'
