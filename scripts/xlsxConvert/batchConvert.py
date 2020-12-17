@@ -4,7 +4,7 @@ import subprocess
 from multiprocessing.dummy import Pool
 from argparse import ArgumentParser
 import pandas as pd
-from customerSeg.config import data_dir
+from customerSeg.config import raw_dir, interim_dir, merged_dir
 
 
 class BatchConverter:
@@ -58,18 +58,10 @@ class BatchConverter:
 
 
 if __name__ == '__main__':
-    # parser = ArgumentParser(description="Convert batches of xlsx files to csv, using xlsx2csv/multithreading")
-
-    # parser.add_argument('indir', metavar='xlsx_dir', help='extraction directory containing xlsx files')
-    # parser.add_argument('outdir', metavar='csv_dir', help='output directory to save csv files')
-    # parser.add_argument('outpath', metavar='merge_path', default='', help='output merged csv filepath')
-
-    # options = parser.parse_args()
-
     converter_script_path = Path(__file__).parent / 'xlsx2csv.py'
-    xlsx_directory= data_dir / 'extract'
-    csv_directory = data_dir / 'csv'
-    output_filepath = data_dir / 'merged' / 'merge.csv'
+    xlsx_directory= raw_dir
+    csv_directory = interim_dir
+    output_filepath = merged_dir / 'merge.csv'
 
     BC = BatchConverter(xlsx_directory, csv_directory, output_filepath, converter_script_path)
     BC.run()
