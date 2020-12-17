@@ -23,6 +23,6 @@ def customer_table(df):
                                 
 
 if __name__ == "__main__":
-    from customerSeg.config import data_dir, raw_dir
+    from customerSeg.config import data_dir, interim_dir
     df = pd.read_csv(raw_dir)
     
