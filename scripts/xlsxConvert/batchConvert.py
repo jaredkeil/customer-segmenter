@@ -14,32 +14,33 @@ class BatchConverter:
         self.csv_dir = csv_dir
         self.outputcsv = outputcsv
         self.script_path = script_path
+        self.commands = []
     
     def run(self, n_threads=2):
         """
         Converts all .xlsx files in <xlsx_dir> to .csv files, saved to <csv_dir>
         """
         print(f'Searching for files in {self.xlsx_dir}')
-        commands = self._generate_subprocess_list()
-
-        print(f'Converting {len(commands)} files...')
-        self._multithread_calls(commands, n_threads)
+        self._generate_subprocess_list()
+        print(f'Converting {len(self.commands)} files...')
+        self._multithread_calls(n_threads)
         print('Converted')
+        return None
     
     def _generate_subprocess_list(self):
-        commands = []
         for filepath in self.xlsx_dir.glob('*.xlsx'):
             filename = re.search(r'(.+[\\|\/])(.+)(\.(csv|xlsx|xls))', str(filepath)).group(2) # Extract File Name on group 2 "(.+)"
             call = ["python", str(self.script_path), str(filepath), str(self.csv_dir/filename)+'.csv']
-            commands.append(call)
-        return commands
+            self.commands.append(call)
+        return None
 
-    def _multithread_calls(self, command_list, n_threads):
+    def _multithread_calls(self, n_threads):
         pool = Pool(2)
         # on Windows: use functools.partial(subprocess.call, shell=True) in place of subprocess.call 
-        for i, return_code in enumerate(pool.imap(subprocess.call, command_list)):
+        for i, return_code in enumerate(pool.imap(subprocess.call, self.commands)):
             if return_code != 0:
                 print(f"Command # {i} failed with return code {return_code}.")
+        return None
 
     def merge_csvs(self, output_filepath):
         """
@@ -55,7 +56,7 @@ class BatchConverter:
 
         bigdataframe = pd.concat(listofdataframes).reset_index(drop=True)
         bigdataframe.to_csv(self.outputcsv,index=False)
-
+        return None
 
 if __name__ == '__main__':
     converter_script_path = Path(__file__).parent / 'xlsx2csv.py'
