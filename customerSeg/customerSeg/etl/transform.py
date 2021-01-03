@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 
-
 class Transform:
 
     def __init__(self, df):
@@ -37,14 +36,18 @@ class Transform:
                     'TotalSum': 'MonetaryValue'},
             inplace=True)
     
+    def save(self):
+        self.customers.to_csv(self.target)
+
+
     def run(self):
         self.preprocess()
         self.generate_customers_table()
 
 
+from datetime import datetime, timedelta
+
 if __name__ == "__main__":
-    from customerSeg.config import interim_dir
-    
     datapath  = interim_dir / ''
     df = pd.read_csv(interim_dir)
     

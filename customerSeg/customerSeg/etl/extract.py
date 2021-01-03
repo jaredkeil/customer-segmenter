@@ -20,7 +20,7 @@ class Extract:
         """
         self.source = StringIO(str(source))
         self.target = target
-        self.set_extract_method()
+        self._set_extract_method()
 
     def _check_source_format(self, src):
         src = self.source
@@ -31,17 +31,22 @@ class Extract:
         elif is_fsspec_url(src):
             fmt = 's3'
         else:
-            return 'invalid'
+            fmt = 'invalid'
         return fmt
     
-    def set_extract_method(self):
+    def _set_extract_method(self):
         input_type = self._check_source_format(self.source)
+        
         if input_type == 'url':
             self.extract = self._extract_from_url
         elif input_type == 'filelike':
             self.extract = self._extract_from_filelike
         elif input_type == 's3':
             self.extract = self._extract_from_s3
+        else:
+            self.extract = None
+        
+        return None
         
     def _extract_from_url(self):
         """Read from url"""

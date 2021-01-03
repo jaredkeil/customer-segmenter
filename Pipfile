@@ -13,6 +13,7 @@ openpyxl = "*"
 fastparquet = "*"
 pyspark = "*"
 seaborn = "*"
+azure-storage-blob = "*"
 
 [dev-packages]
 pylint = "*"
