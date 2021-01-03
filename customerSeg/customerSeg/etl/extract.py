@@ -38,13 +38,13 @@ class Extract:
         input_type = self._check_source_format(self.source)
         
         if input_type == 'url':
-            self.extract = self._extract_from_url
+            self._extract = self._extract_from_url
         elif input_type == 'filelike':
-            self.extract = self._extract_from_filelike
+            self._extract = self._extract_from_filelike
         elif input_type == 's3':
-            self.extract = self._extract_from_s3
+            self._extract = self._extract_from_s3
         else:
-            self.extract = None
+            self._extract = None
         
         return None
         
@@ -79,5 +79,5 @@ class Extract:
     def _extract_from_s3(self):
         pass
 
-    def run(self):
-        self.extract()
+    def extract(self):
+        self._extract()
