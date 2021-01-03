@@ -1,11 +1,13 @@
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
+import customerSeg.config
 
 class Transform:
 
-    def __init__(self, df):
+    def __init__(self, df, target):
         self.df = df
+        self.target = target
         self.customers = pd.DataFrame()
 
     def preprocess(self):
@@ -39,17 +41,17 @@ class Transform:
     def save(self):
         self.customers.to_csv(self.target)
 
-
-    def run(self):
+    def transform(self):
         self.preprocess()
         self.generate_customers_table()
+        self.save()
 
-
-from datetime import datetime, timedelta
 
 if __name__ == "__main__":
-    datapath  = interim_dir / ''
-    df = pd.read_csv(interim_dir)
+    datapath = customerSeg.config.merged_dir / 'merge.csv'
+    outpath = customerSeg.config.transformed_dir / 'customer_table.csv'
     
-    T = Transform(df)
-    T.run()
+    df = pd.read_csv(datapath)
+    
+    T = Transform(df=df, target=outpath)
+    T.transform()
