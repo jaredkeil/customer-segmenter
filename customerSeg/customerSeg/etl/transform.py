@@ -48,8 +48,8 @@ class Transform:
 
 
 if __name__ == "__main__":
-    datapath = customerSeg.config.merged_dir / 'merge.csv'
-    outpath = customerSeg.config.transformed_dir / 'customer_table.csv'
+    datapath = customerSeg.config.merged_data_path  # .../data/merged/merge.csv
+    outpath = customerSeg.config.customer_table_path # .../data/transformed/customer_table.csv
     
     df = pd.read_csv(datapath)
     
