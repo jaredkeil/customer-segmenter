@@ -7,7 +7,6 @@ root = Path(__file__).parents[2]
 ### Directories
 data_dir = root / 'data'
 raw_dir = data_dir / 'raw'
-
 interim_dir = data_dir / 'interim'
 
 merged_dir = interim_dir / 'merged'
