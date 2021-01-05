@@ -1,5 +1,5 @@
 """
-Export transformed data into warehouse
+Load processsed, transformed data into warehouse
 """
 
 from pathlib import Path
@@ -35,14 +35,11 @@ class Load:
         print('Uploaded')
 
 
-
-
 if __name__ == '__main__':
 
     src = customerSeg.config.transformed_dir / '' # filename goes here
     tgt = 'test_output'
     mthd = 'blob'
-
 
     conn_str = customerSeg.config.azure_connection_string
     cont_name = customerSeg.config.container_name
@@ -52,5 +49,4 @@ if __name__ == '__main__':
             method=mthd, 
             connect_str=conn_str,
             container_name=cont_name)
-
     L.load()
